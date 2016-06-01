@@ -5,6 +5,8 @@
 
 using namespace std;
 
+// C++ 智能指针详解: http://blog.csdn.net/xt_xiaotian/article/details/5714477
+
 class Item {
   public:
     Item(int idx=0):
@@ -26,6 +28,7 @@ class Item {
 
 
 void TestAutoPtr() {
+  // 重载operator->(), 返回管理对象的指针
   std::auto_ptr<Item> item(new Item(1));
   if (item.get()) {
     item->Print();
