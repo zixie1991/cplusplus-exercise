@@ -5,6 +5,8 @@
 
 using namespace std;
 
+// 从caffe中学习宏定义，宏函数: http://blog.csdn.net/u014114990/article/details/47834507
+
 // 防止头文件(.h)重复定义
 //#ifndef HEADER_H_
 //#define HEADER_H_
@@ -35,13 +37,13 @@ y = tmp; \
 // 由于没有对变参起名，我们用默认的宏__VA_ARGS__来替代它
 #define LOG_DEBUG(fmt, ...) do \
 { \
-  fprintf(stderr, "[DEBUG]: "fmt"\n", ##__VA_ARGS__); \
+  fprintf(stderr, "[DEBUG %s:%d]: "fmt"\n", __FILE__, __LINE__, ##__VA_ARGS__); \
 } while(0)
 
 // 我们显式地命名变参为args
 #define LOG_INFO(fmt, args...) do \
 { \
-  fprintf(stderr, "[INFO]: "fmt"\n", ##args); \
+  fprintf(stderr, "[INFO %s:%d]: "fmt"\n", __FILE__, __LINE__, ##args); \
 } while(0)
 
 
