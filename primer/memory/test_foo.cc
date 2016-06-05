@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <iostream>
 
@@ -36,9 +37,13 @@ void foo() {
   fprintf(stderr, "a9=%p\n", a9);
   fprintf(stderr, "s1=%p\n", s1);
   fprintf(stderr, "s2=%p\n", s2);
+
+  sleep(60);
 }
 
 int main() {
+  // 查看进程内存映射信息
+  // pmap -d <pid>
   foo();
   return 0;
 }
