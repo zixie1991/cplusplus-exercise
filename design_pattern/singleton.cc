@@ -96,6 +96,7 @@ class LazySingletonTemplateType {
 class LazySingletonInside {
   public:
     static LazySingletonInside& instance() {
+      // after c++0x, it's thread safe
       static LazySingletonInside in;
       return in;
     }
