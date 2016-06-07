@@ -97,6 +97,7 @@ class LazySingletonInside {
   public:
     static LazySingletonInside& instance() {
       // after c++0x, it's thread safe
+      // c++0x以后，要求编译器保证内部静态变量的线程安全性，可以不加锁
       static LazySingletonInside in;
       return in;
     }
