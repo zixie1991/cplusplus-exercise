@@ -63,6 +63,10 @@ int Abs2(int n) {
   return (n ^ i) - i;
 }
 
+int Max(int a, int b) {
+  return (a + b +abs(a - b)) >> 1;
+}
+
 // 位图
 // int flag[MAX]
 // flag[i / 32] = 1 << (i % 32)
