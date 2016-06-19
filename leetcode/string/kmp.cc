@@ -92,8 +92,8 @@ char* KMP(const char* text, const char* pattern) {
 }
 
 int main() {
-  const char* text = "ababacacca";
-  const char* pattern = "b";
+  const char* text = "";
+  const char* pattern = "";
   cout << "text: " << text << endl;
   cout << "pattern: " << pattern << endl;
   cout << "kmp: " << KMP(text, pattern) << endl;
