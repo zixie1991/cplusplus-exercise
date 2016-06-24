@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 
@@ -117,6 +118,14 @@ void TestFooWithException() {
   // 都还没有处理结束，因此这就陷入了一个矛盾之中，或者说无限的递归嵌套之中。
 }
 
+void TestFooWithExceptionVector() {
+  try {
+    vector<FooWithException> foo_vec(1); // 多次调用析构函数(抛出异常)，导致程序崩溃
+  } catch (runtime_error& e) {
+    cerr << e.what() << endl;
+  }
+}
+
 void TestFooWithWrapperException() {
   try {
     FooWithWrapperException foo;
@@ -137,6 +146,8 @@ int main() {
     // 并未catch住DestructorError
     cerr << e.what() << endl;
   }
+  cout << "TestFooWithExceptionVector:" << endl;
+  TestFooWithExceptionVector(); // 程序崩溃
   cout << "TestFooWithWrapperException:" << endl;
   TestFooWithWrapperException();
   return 0;
