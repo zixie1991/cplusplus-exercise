@@ -36,6 +36,8 @@ class FileReaderWithException {
     FileReaderWithException(const string& filename) {
       fp_ = fopen(filename.c_str(), "r");
       if (NULL == fp_) {
+        // 抛出异常后析构函数就不会被调用
+        // 资源释放需要自己手动处理
         throw FileNotFoundException("File not found.");
       }
     }
