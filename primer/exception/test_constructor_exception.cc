@@ -124,6 +124,7 @@ class FileWithException {
     {
     }
 
+    // 将构造函数写成了函数try语句块
     //FileWithException(const string& filename) try: file_reader_(filename) {
     //} catch (FileNotFoundException& file_not_found_error) {
       //cerr << file_not_found_error.what() << endl;
