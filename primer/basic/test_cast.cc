@@ -36,6 +36,45 @@ void test_static_cast() {
   printf("%x %x\n", a, (int&)b);
 }
 
+class FeatureExtraction {
+  public:
+    FeatureExtraction() {}
+    void ToString() {
+      cout << "Feature Extraction" << endl;
+    }
+};
+
+typedef void* handle_t;
+handle_t CreateFeatureExtraction() {
+  FeatureExtraction* feature_extraction = new FeatureExtraction();
+  handle_t wrapper_feature_extraction = reinterpret_cast<handle_t>(feature_extraction);
+
+  return wrapper_feature_extraction;
+}
+
+void DestroyFeatureExtraction(handle_t handle) {
+  FeatureExtraction* inner_feature_extraction = reinterpret_cast<FeatureExtraction*>(handle);
+  if (NULL != inner_feature_extraction) {
+    delete inner_feature_extraction; 
+    inner_feature_extraction = NULL;
+  }
+}
+
+void test_reinterpert_cast() {
+  char *p1 = NULL;
+  void* v1 = reinterpret_cast<void*>(p1);
+  printf("%p\n", v1);
+
+  FeatureExtraction* feature_extraction = new FeatureExtraction();
+  int wrapper_feature_extraction = reinterpret_cast<int&>(feature_extraction);
+  FeatureExtraction* inner_feature_extraction = reinterpret_cast<FeatureExtraction*>(wrapper_feature_extraction);
+  inner_feature_extraction->ToString();
+
+  handle_t handle = CreateFeatureExtraction();
+  DestroyFeatureExtraction(handle);
+  handle = NULL;
+}
+
 int main() {
   cout << "test_c_style:" << endl;
   test_c_style();
@@ -43,5 +82,7 @@ int main() {
   test_cpp_style();
   cout << "test_static_cast:" << endl;
   test_static_cast();
+  cout << "test_reinterpert_cast:" << endl;
+  test_reinterpert_cast();
   return 0;
 }
