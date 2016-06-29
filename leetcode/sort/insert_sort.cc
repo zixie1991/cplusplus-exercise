@@ -20,6 +20,7 @@ void InsertSort(int a[], int n) {
 }
 
 // 二分插入排序
+// 稳定排序, 时间O(n*log2n)
 void BinaryInsertSort(int a[], int n) {
   for (int i = 1; i < n; i++) {
     int tmp = a[i];
