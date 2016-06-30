@@ -89,8 +89,81 @@ void TestQueuePushAndPop() {
   cout << QueueLength(&q) << endl;
 }
 
+const int MAX = 1000000;
+
+struct SQueue {
+  int s1[MAX]; // 入队栈
+  int s2[MAX]; // 出队栈
+  int top1;
+  int top2;
+
+  SQueue(): top1(0), top2(0) {}
+};
+
+void SQueuePush(SQueue* q, int val) {
+  q->s1[q->top1++] = val;
+}
+
+int SQueueFront(SQueue* q) {
+  if (q->top2 != 0) {
+    return q->s2[q->top2 - 1];
+  }
+
+  assert(q->top1 != 0);
+  while (q->top1) {
+    q->s2[q->top2++] = q->s1[--q->top1];
+  }
+
+  return q->s2[q->top2 - 1];
+}
+
+int SQueuePop(SQueue* q) {
+  if (q->top2 != 0) {
+    return q->s2[--q->top2];
+  }
+
+  assert(q->top1 != 0);
+  while (q->top1) {
+    q->s2[q->top2++] = q->s1[--q->top1];
+  }
+
+  return q->s2[--q->top2];
+}
+
+int SQueueLength(SQueue* q) {
+  return q->top1 + q->top2;
+}
+
+void TestSQueuePushAndPop() {
+  SQueue q;
+  SQueuePush(&q, 1);
+  SQueuePush(&q, 2);
+  SQueuePush(&q, 3);
+  SQueuePush(&q, 4);
+
+  cout << SQueueFront(&q) << endl;
+  SQueuePop(&q);
+  cout << SQueueFront(&q) << endl;
+  SQueuePop(&q);
+  SQueuePush(&q, 5);
+  cout << SQueueFront(&q) << endl;
+  SQueuePop(&q);
+  cout << SQueueFront(&q) << endl;
+  SQueuePop(&q);
+  cout << SQueueFront(&q) << endl;
+  SQueuePop(&q);
+
+  SQueuePush(&q, 6);
+  cout << SQueueFront(&q) << endl;
+  SQueuePop(&q);
+
+  cout << SQueueLength(&q) << endl;
+}
+
 int main() {
   cout << "TestQueuePushAndPop:" << endl;
   TestQueuePushAndPop();
+  cout << "TestSQueuePushAndPop:" << endl;
+  TestSQueuePushAndPop();
   return 0;
 }
