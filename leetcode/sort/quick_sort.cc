@@ -22,8 +22,8 @@ void QuickSort(int a[], int begin, int end) {
     // 右侧子序列的值大于等于pivot
     while (left < right && a[right] >= pivot) right--;
     a[left] = a[right];
-    // 左侧子序列的值小于pivot
-    while (left < right && a[left] < pivot) left++;
+    // 左侧子序列的值小于等于pivot
+    while (left < right && a[left] <= pivot) left++;
     a[right] = a[left];
   }
   a[left] = pivot;
