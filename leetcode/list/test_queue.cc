@@ -91,6 +91,7 @@ void TestQueuePushAndPop() {
 
 const int MAX = 1000000;
 
+// 考虑使用模板
 struct SQueue {
   int s1[MAX]; // 入队栈
   int s2[MAX]; // 出队栈
