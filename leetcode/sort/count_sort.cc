@@ -33,16 +33,24 @@ void BucketSort(int a[], int n) {
     count[a[i]]++;
   }
 
-  for (int i = 1; i <= k; i++) {
-    count[i] += count[i-1];
-  }
+  //for (int i = 1; i <= k; i++) {
+    //count[i] += count[i-1];
+  //}
 
-  for (int i = n - 1; i >= 0; i--) {
-    b[--count[a[i]]] = a[i];
-  }
+  //for (int i = n - 1; i >= 0; i--) {
+    //b[--count[a[i]]] = a[i];
+  //}
 
-  for (int i = 0; i < n; i++) {
-    a[i] = b[i];
+  //for (int i = 0; i < n; i++) {
+    //a[i] = b[i];
+  //}
+
+  // better method
+  int idx = 0;
+  for (int i = 0; i <= k; i++) {
+    for (int j = 0; j < count[i]; j++) {
+      a[idx++] = i;
+    }
   }
 
   delete[] count;
