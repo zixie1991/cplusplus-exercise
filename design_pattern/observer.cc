@@ -9,6 +9,7 @@ using namespace std;
 
 // 观察者模式
 // C++设计模式——观察者模式: http://www.jellythink.com/archives/359
+// 我所理解的设计模式（C++实现）——观察者模式（Observer Pattern）: http://blog.csdn.net/lcl_data/article/details/9208561
 
 class Observer;
 
