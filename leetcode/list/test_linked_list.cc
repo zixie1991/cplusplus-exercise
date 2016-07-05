@@ -141,6 +141,16 @@ void ListPrint(ListNode* list) {
   cout << endl;
 }
 
+// 反向打印(栈, 递归)
+void ListReversePrint(ListNode* list) {
+  if (NULL == list) {
+    return ;
+  }
+
+  ListReversePrint(list->next);
+  cout << list->val << " ";
+}
+
 // 清空
 void ListClear(ListNode** list) {
   ListNode* ptr = *list;
@@ -314,6 +324,7 @@ void TestListInsertAndPrint() {
 
   cout << ListLength(list) << endl;
   ListPrint(list);
+  ListReversePrint(list);
 
   ListClear(&list);
 }
