@@ -51,6 +51,11 @@ class A6 {
     int i;
 };
 
+class A7 {
+  public:
+    int i;
+};
+
 class B0 {
 
 };
@@ -60,7 +65,8 @@ class B1: public B0 {
 };
 
 class B1Virtual: public virtual B0 {
-
+  public:
+    int a;
 };
 
 class B2: public B1 {
@@ -79,6 +85,9 @@ void TestClassMemoryAlignment() {
   cout << "sizeof(A4):" << sizeof(A4) << endl;
   cout << "sizeof(A5):" << sizeof(A5) << endl;
   cout << "sizeof(A6):" << sizeof(A6) << endl;
+  cout << "sizeof(A7):" << sizeof(A7) << endl;
+  A7 a7;
+  cout << "sizeof(int):" << sizeof(int) << ", sizeof(a7.i):" << sizeof(a7.i) << endl;
 }
 
 void TestClassSizeof() {
