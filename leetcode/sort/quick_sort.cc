@@ -32,10 +32,40 @@ void QuickSort(int a[], int begin, int end) {
   QuickSort(a, left + 1, end);
 }
 
+int RandomIndex(int begin, int end) {
+  // 左闭右开
+  return begin + random() % (end - begin);
+}
+
+// 快排另一种实现
+void QuickSort2(int a[], int begin, int end) {
+  if (begin >= end - 1) {
+    return ;
+  }
+
+  int small = RandomIndex(begin, end);
+  swap(a[small], a[end - 1]);
+  small = begin - 1;
+  for (int index = begin; index < end - 1; index++) {
+    if (a[index] < a[end - 1]) {
+      ++small;
+      swap(a[small], a[index]);
+    }
+  }
+
+  ++small;
+  swap(a[small], a[end - 1]);
+
+  QuickSort2(a, begin, small);
+  QuickSort2(a, small + 1, end);
+}
+
+
 void TestQuickSort() {
   int a[] = {1, 3, 2, 4, 6, 5};
   int n = 6;
-  QuickSort(a, 0, n);
+  //QuickSort(a, 0, n);
+  QuickSort2(a, 0, n);
   for (int i = 0; i < n; i++) {
     cout << a[i] << " ";
   }
