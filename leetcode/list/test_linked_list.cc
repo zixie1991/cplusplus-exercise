@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include <iostream>
 #include <list>
@@ -349,6 +350,30 @@ ListNode* ListMergeSortedList(ListNode* list1, ListNode* list2) {
   return list3->next;
 }
 
+ListNode* ListFindKthNodeFromEnd(ListNode* list, int k) {
+  if (!list || k <= 0) {
+    return NULL;
+  }
+
+  ListNode* after = list;
+  for (int i = 0; i < k - 1; i++) {
+    if (after->next) {
+      after = after->next;
+    } else {
+      // 小于k个节点
+      return NULL;
+    }
+  }
+
+  ListNode* before = list;
+  while (after->next) {
+    before = before->next;
+    after = after->next;
+  }
+
+  return before;
+}
+
 void TestListInsertAndPrint() {
   ListNode* list = NULL;
   ListInsert(&list, 1);
@@ -504,6 +529,21 @@ void TestListMergeSortedList() {
   ListPrint(list3);
 }
 
+void TestListFindKthNodeFromEnd() {
+  ListNode* list = NULL;
+  ListInsert(&list, 1);
+  ListInsert(&list, 2);
+  ListInsert(&list, 3);
+  ListInsert(&list, 4);
+
+  assert(NULL == ListFindKthNodeFromEnd(list, 0));
+  assert(4 == ListFindKthNodeFromEnd(list, 1)->val);
+  assert(3 == ListFindKthNodeFromEnd(list, 2)->val);
+  assert(2 == ListFindKthNodeFromEnd(list, 3)->val);
+  assert(1 == ListFindKthNodeFromEnd(list, 4)->val);
+  assert(NULL == ListFindKthNodeFromEnd(list, 5));
+}
+
 int main() {
   list<int> li_a;
   // c++11
@@ -526,5 +566,7 @@ int main() {
   TestListRemoveNthNodeFromEnd();
   cout << "TestListMergeSortedList:" << endl;
   TestListMergeSortedList();
+  cout << "TsetListFindKthNodeFromEnd:" <<endl;
+  TestListFindKthNodeFromEnd();
   return 0;
 }
