@@ -27,7 +27,7 @@ void TestBit() {
   // | |=
   printf("a1|a2=%x\n", a1 | a2);
   // ^ ^=
-  printf("a1^a2=%x\n", a1 ^ a2);
+  printf("a1^a2=%x, a2^a2=%x\n", a1 ^ a2, a2 ^ a2);
   // <<
   printf("a1<<2=%x, a2<<2=%x\n", a1 << 2, a2 << 2);
   // >> 负数右移，左边补1
