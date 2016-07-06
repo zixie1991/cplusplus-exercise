@@ -77,6 +77,40 @@ void ListRemoveFirstNode(ListNode** list) {
   free(ptr);
 }
 
+// 删除已知的节点(保证节点在链表中)
+void ListRemoveNode(ListNode** list, ListNode* node) {
+  if (!list || !node) {
+    return ;
+  }
+
+  if (node->next) {
+    // 要删除的节点有后续节点
+    node->val = node->next->val;
+    ListNode* ptr = node->next;
+    node->next = node->next->next;
+
+    delete ptr;
+    ptr = NULL;
+  } else {
+    // 要删除的节点在链表末尾
+    if (*list == node) {
+      // 链表只有一个节点
+      delete node;
+      node = NULL;
+      *list = NULL;
+    } else {
+      ListNode* ptr = *list;
+      while (ptr->next != node) {
+        ptr = ptr->next;
+      }
+
+      ptr->next = NULL;
+      delete node;
+      node = NULL;
+    }
+  }
+}
+
 // 中间节点
 ListNode* ListMiddleNode(ListNode* list) {
   if (list == NULL || list->next == NULL) {
@@ -383,7 +417,7 @@ void TestListReverse() {
   ListClear(&list);
 }
 
-void TestListRemoveFistNode() {
+void TestListRemoveFirstNode() {
   ListNode* list = NULL;
   ListInsert(&list, 1);
   ListInsert(&list, 3);
@@ -394,6 +428,34 @@ void TestListRemoveFistNode() {
   ListPrint(list);
 
   ListRemoveFirstNode(&list);
+
+  cout << ListLength(list) << endl;
+  ListPrint(list);
+
+  ListClear(&list);
+}
+
+void TestListRemoveNode() {
+  ListNode* list = NULL;
+  ListInsert(&list, 1);
+  ListInsert(&list, 3);
+  ListInsert(&list, 2);
+  ListInsert(&list, 4);
+
+  cout << ListLength(list) << endl;
+  ListPrint(list);
+
+  ListRemoveNode(&list, list->next);
+
+  cout << ListLength(list) << endl;
+  ListPrint(list);
+
+  ListRemoveNode(&list, list);
+
+  cout << ListLength(list) << endl;
+  ListPrint(list);
+
+  ListRemoveNode(&list, list->next);
 
   cout << ListLength(list) << endl;
   ListPrint(list);
@@ -455,7 +517,9 @@ int main() {
   cout << "TestListReverse:" << endl;
   TestListReverse();
   cout << "TestListRemoveFirstNode:" << endl;
-  TestListRemoveFistNode();
+  TestListRemoveFirstNode();
+  cout << "TestListRemoveNode:" << endl;
+  TestListRemoveNode();
   cout << "TestListPalindrome:" << endl;
   TestListPalindrome();
   cout << "TestListRemoveNthNodeFromEnd:" << endl;
