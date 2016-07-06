@@ -51,6 +51,7 @@ double Power(double base, int exponent) {
   return ret;
 }
 
+// 快速幂运算
 double FastPowerWithUnsignedInt(double base, unsigned int exponent) {
   double ret = 1.0;
 
