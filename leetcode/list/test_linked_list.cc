@@ -118,14 +118,14 @@ ListNode* ListMiddleNode(ListNode* list) {
     return list;
   }
 
-  ListNode* ptr1 = list;
-  ListNode* ptr2 = list;
-  while (ptr2->next != NULL && ptr2->next->next != NULL) {
-    ptr1 = ptr1->next;
-    ptr2 = ptr2->next->next;
+  ListNode* slow = list;
+  ListNode* fast= list;
+  while (fast->next != NULL && fast->next->next != NULL) {
+    slow = slow->next;
+    fast = fast->next->next;
   }
 
-  return ptr1;
+  return slow;
 }
 
 // 排序
