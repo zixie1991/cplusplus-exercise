@@ -47,7 +47,7 @@ bool BellmanFord(ForwardStarGraph& graph, int src, int* dist) {
 
   for (int i = 0; i < graph.num_edges; i++) {
     if (dist[graph.edge[i].from] + graph.edge[i].weight < dist[graph.edge[i].to]) {
-      return false; // 负圈
+      return false; // 负权回路
     }
   }
 

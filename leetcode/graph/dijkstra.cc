@@ -17,7 +17,7 @@ struct EdgeNode {
   int weight;
   int next;
 
-  bool operator<(const EdgeNode& node) {
+  bool operator<(const EdgeNode& node) const {
     return weight > node.weight;
   }
 
@@ -25,8 +25,8 @@ struct EdgeNode {
 };
 
 struct ForwardStarGraph {
-  int num_vertexes; // 顶点数目
-  int num_edges; // 边数目
+  int num_vertexes; // 顶点数
+  int num_edges; // 边数
   int* head;
   EdgeNode* edge;
 };
@@ -39,7 +39,8 @@ void AddEdge(int u, int v, int w, ForwardStarGraph* graph) {
   graph->head[u] = graph->num_edges++;
 }
 
-// 带权有向图
+// 带权有向图(无负的权值)
+// Dijkstra算法, 时间: O(ElogV)
 void Dijkstra(ForwardStarGraph& graph, int src, int* dist) {
   bool* visited = new bool[graph.num_vertexes];
   priority_queue<EdgeNode> q;
@@ -51,11 +52,11 @@ void Dijkstra(ForwardStarGraph& graph, int src, int* dist) {
   visited[src] = true;
   q.push(EdgeNode(src, src, 0));
   for (int i = 0; i < graph.num_vertexes - 1; i++) {
-    int from = q.top().from;
+    int from = q.top().to;
     for (int j = graph.head[from]; j != -1; j = graph.edge[j].next) {
-      if (dist[from] + graph.edge[j].weight < dist[graph.edge[j].to]) {
+      if (!visited[graph.edge[j].to] && 
+          dist[from] + graph.edge[j].weight < dist[graph.edge[j].to]) {
         dist[graph.edge[j].to] = dist[from] + graph.edge[j].weight;
-
         q.push(EdgeNode(src, graph.edge[j].to, dist[graph.edge[j].to]));
       }
     }
@@ -68,7 +69,7 @@ void Dijkstra(ForwardStarGraph& graph, int src, int* dist) {
       break;
     }
 
-    visited[q.top().from] = true;
+    visited[q.top().to] = true;
   }
 }
 

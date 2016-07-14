@@ -31,15 +31,19 @@ struct ForwardStarGraph {
   EdgeNode* edge;
 };
 
-void SPFA(ForwardStarGraph& graph, int src, int* dist) {
-  bool* in_queue = new bool[graph.num_vertexes]; // 是否在队列中
+// Shortest Path Faster Algorithm, 时间: O(kE), 不稳定
+bool SPFA(ForwardStarGraph& graph, int src, int* dist) {
+  bool* in_queue = new bool[graph.num_vertexes]; // 顶点是否在队列中
+  int* push_queue_count = new int[graph.num_vertexes]; // 顶点入队次数
   for (int i = 0; i < graph.num_vertexes; i++) {
     dist[i] = INT_MAX;
     in_queue[i] = false;
+    push_queue_count[i] = 0;
   }
 
   dist[src] = 0;
   in_queue[src] = true;
+  push_queue_count[src]++;
   queue<int> q;
   while (!q.empty()) {
     int i = q.front();
@@ -51,10 +55,17 @@ void SPFA(ForwardStarGraph& graph, int src, int* dist) {
         if (!in_queue[graph.edge[j].to]) {
           q.push(graph.edge[j].to);
           in_queue[graph.edge[j].to] = true;
+          push_queue_count[graph.edge[j].to]++;
+
+          if (push_queue_count[graph.edge[j].to] == graph.num_vertexes) {
+            return false; // 负权回路
+          }
         }
       }
     }
   }
+
+  return true;
 }
 
 int main() {

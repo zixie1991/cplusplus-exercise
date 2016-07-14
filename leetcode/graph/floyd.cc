@@ -9,6 +9,7 @@
 using namespace std;
 
 // 所有点对最短路径
+// 最短路径算法——Dijkstra,Bellman-Ford,Floyd-Warshall,Johnson: http://dsqiu.iteye.com/blog/1689163
 
 // 邻接矩阵
 struct DenseGraph {
@@ -17,11 +18,12 @@ struct DenseGraph {
   int** mat;
 };
 
-// 带权有向图
+// 带权有向图(无负权回路)
+// Floyd算法, 时间: O(V**3)
 void Floyd(DenseGraph& graph, int** dist) {
   for (int i = 0; i < graph.num_vertexes; i++) {
     for (int j = 0; j < graph.num_vertexes; j++) {
-      dist[i][j] = i == j ? 0 : INT_MAX;
+      dist[i][j] = graph.mat[i][j];
     }
   }
 

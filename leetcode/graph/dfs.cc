@@ -6,16 +6,12 @@
 
 using namespace std;
 
-const int kMaxVertex = 10000;
-
 // 邻接矩阵
 struct DenseGraph {
-  int num_vertexes; // 顶点数目
-  int num_edges; // 边数目
+  int num_vertexes; // 顶点数
+  int num_edges; // 边数
   int** mat;
 };
-
-// 无向图
 
 void DFS(DenseGraph& graph, int u, bool* visited) {
   for (int v = 0; v < graph.num_vertexes; v++) {
@@ -28,11 +24,10 @@ void DFS(DenseGraph& graph, int u, bool* visited) {
   }
 }
 
-// POJ Satellite Photographs
 void DFS(DenseGraph& graph, int u, bool** visited) {
   for (int v = 0; v < graph.num_vertexes; v++) {
     if (graph.mat[u][v] && !visited[u][v]) {
-      visited[u][v] = visited[v][u] = true;
+      visited[u][v] = true;
       DFS(graph, v, visited);
 
       // TODO do something

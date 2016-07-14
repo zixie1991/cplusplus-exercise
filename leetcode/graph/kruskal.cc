@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <algorithm>
-#include <set>
+#include <vector>
 
 using namespace std;
 
@@ -27,25 +27,57 @@ struct ForwardStarGraph {
   EdgeNode* edge;
 };
 
-// 带权无向图
+// 并查集
+class DisjointSet {
+  public:
+    DisjointSet(int num_elements):
+      elements(num_elements)
+    {
+      for (size_t x = 0; x < elements.size(); x++) {
+        elements[x] = x;
+      }
+    }
+
+    void Union(int x, int y) {
+      int px = Find(x);
+      int py = Find(y);
+
+      elements[px] = py;
+    }
+
+    int Find(int x) {
+      if (elements[x] == x) {
+        return x;
+      }
+
+      return elements[x] = Find(elements[x]);
+    }
+
+  private:
+    vector<int> elements; 
+};
+
+
+// 带权无向图, 稀疏图
+// Kruskal算法, 时间: O(ElogE)
 int Kruskal(ForwardStarGraph& graph) {
   int sum = 0;
-  // 可以尝试并查集
-  set<int> s;
+  DisjointSet s(graph.num_vertexes);
   sort(graph.edge, graph.edge + graph.num_edges);
 
   int j = 0;
   for (int i = 0; i < graph.num_vertexes; i++) {
-    while (j < graph.num_edges && s.count(graph.edge[j].from) && 
-       s.count(graph.edge[j].to)) {
+    while (j < graph.num_edges && s.Find(graph.edge[j].from) == 
+       s.Find(graph.edge[j].to)) {
       j++;
     }
 
     if (j >= graph.num_edges) {
+      // 不连通
       return -1;
     }
 
-    s.insert(j);
+    s.Union(graph.edge[j].from, graph.edge[j].to);
     sum += graph.edge[j++].weight;
   }
 

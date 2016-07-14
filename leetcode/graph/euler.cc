@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -25,6 +26,33 @@ struct ForwardStarGraph {
   int* head; // 顶点
   EdgeNode* edge;
 };
+
+// 无向图的连通性
+bool IsConnected(ForwardStarGraph& graph) {
+  bool* visited = new bool[graph.num_vertexes];
+  for (int i = 0; i < graph.num_vertexes; i++) {
+    visited[i] = false;
+  }
+
+  queue<int> q;
+  visited[0] = true;
+  q.push(0);
+  int cnt = 0;
+  while (!q.empty()) {
+    int i = q.front();
+    q.pop();
+    cnt++;
+
+    for (int j = graph.head[i]; j != -1; j = graph.edge[j].next) {
+      if (!visited[graph.edge[j].to]) {
+        visited[graph.edge[j].to] = true;
+        q.push(graph.edge[j].to);
+      }
+    }
+  }
+
+  return cnt == graph.num_vertexes;
+}
 
 // 无向图
 bool IsEuler(ForwardStarGraph& graph) {
@@ -48,14 +76,14 @@ bool IsEuler(ForwardStarGraph& graph) {
 }
 
 // 欧拉通路
-void Euler(ForwardStarGraph& graph, int u, bool* visited, stack<int>* path) {
-  for (int j = graph.head[u]; j != -1; j = graph.edge[j].next) {
-    if (!visited[graph.edge[j].weight]) {
-      visited[graph.edge[j].weight] = true;
+void Euler(ForwardStarGraph& graph, int src, bool* visited, stack<int>* path) {
+  for (int j = graph.head[src]; j != -1; j = graph.edge[j].next) {
+    if (!visited[j]) {
+      visited[j] = true;
       Euler(graph, graph.edge[j].to, visited, path);
 
       // 记录欧拉通路
-      path->push(graph.edge[j].weight);
+      path->push(j);
     }
   }
 }

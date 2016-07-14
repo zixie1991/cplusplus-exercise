@@ -17,7 +17,8 @@ struct DenseGraph {
   int** mat;
 };
 
-// 有向图(无权)
+// 有向无环图
+// 拓扑排序, 时间: O(V**2)
 bool TopoSort(DenseGraph& graph, vector<int> topo_vec) {
   int* in_degree = new int[graph.num_vertexes]; // 顶点的入读
 
@@ -47,7 +48,7 @@ bool TopoSort(DenseGraph& graph, vector<int> topo_vec) {
       if (graph.mat[from][to]) {
         in_degree[to]--;
 
-        if (in_degree[to]) {
+        if (!in_degree[to]) {
           zero_in_degree_vertexes.push(to);
         }
       }
