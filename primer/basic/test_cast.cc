@@ -73,6 +73,14 @@ void test_reinterpert_cast() {
   handle_t handle = CreateFeatureExtraction();
   DestroyFeatureExtraction(handle);
   handle = NULL;
+
+  cout << "---split line---" << endl;
+  int a[] = {1, 2, 3};
+  int* b = a;
+  //int& c = reinterpret_cast<int&>(b); // 64位机器出现精度丢失
+  long& c = reinterpret_cast<long&>(b);
+  int* d = reinterpret_cast<int*>(c);
+  printf("%p %p %p\n", b, c, d);
 }
 
 int main() {
