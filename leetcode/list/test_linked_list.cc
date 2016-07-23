@@ -264,6 +264,7 @@ ListNode* ListRemoveNthNodeFromEnd(ListNode** list, int n) {
 }
 
 // 检查是否有环
+// 笔试题：如何判断单链表是否存在环: http://blog.csdn.net/liuxialong/article/details/6555850
 bool ListHasCycle(ListNode* list) {
   if (NULL == list || NULL == list->next) {
     return false;
