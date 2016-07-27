@@ -44,8 +44,14 @@ class SlowHealth {
     }
 };
 
+void Print(int x, int y) {
+  cout << x << " " << y << endl;
+}
+
 void TestFunctionAndBind() {
   // 函数指针
+  bind(Print, 1, 2)();
+
   GameCharacter gc1;
   cout << gc1.HealthValue() << endl;
   // 成员函数指针
