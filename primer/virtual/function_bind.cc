@@ -50,7 +50,7 @@ void TestFunctionAndBind() {
   cout << gc1.HealthValue() << endl;
   // 成员函数指针
   FastCharacter fc;
-  GameCharacter gc2(bind(&FastCharacter::HealthValue, fc, placeholders::_1));
+  GameCharacter gc2(bind(&FastCharacter::HealthValue, &fc, placeholders::_1));
   cout << gc2.HealthValue() << endl;
   // 函数对象
   SlowHealth sh;
