@@ -4,6 +4,7 @@
 
 // Linux C 函数调用栈
 // c函数调用过程原理及函数栈帧分析: http://blog.csdn.net/zsy2020314/article/details/9429707
+// C语言函数调用栈(一): http://www.cnblogs.com/clover-toeic/p/3755401.html
 
 int func(int a, int b) {
   int c = a + b;
