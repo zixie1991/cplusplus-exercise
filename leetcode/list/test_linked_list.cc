@@ -375,6 +375,10 @@ ListNode* ListFindKthNodeFromEnd(ListNode* list, int k) {
   return before;
 }
 
+// 两个链表的第一个公共节点(暴力、栈或长度)
+ListNode* ListFirstCommonNode(ListNode* list1, ListNode* list2) {
+}
+
 void TestListInsertAndPrint() {
   ListNode* list = NULL;
   ListInsert(&list, 1);
