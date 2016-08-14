@@ -119,21 +119,22 @@ class FileReaderWithFlag {
 
 class FileWithException {
   public:
-    FileWithException(const string& filename):
-      file_reader_(filename)
-    {
-    }
+    //FileWithException(const string& filename):
+      //file_reader_(filename)
+    //{
+    //}
 
     // 将构造函数写成了函数try语句块
-    //FileWithException(const string& filename) try: file_reader_(filename) {
-    //} catch (FileNotFoundException& file_not_found_error) {
-      //cerr << file_not_found_error.what() << endl;
+    FileWithException(const string& filename) try: file_reader_(filename), a_(1) {
+    } catch (FileNotFoundException& file_not_found_error) {
+      cerr << file_not_found_error.what() << endl;
       // catch块里面捕获到的异常不能被忽略，即catch块中必须有一个throw语句重新抛出异常，
       // 如果没有，则默认会将原来捕获到的异常重新抛出，这和一般的行为是不同的。
-    //}
+    }
 
   private:
     FileReaderWithException file_reader_;
+    int a_;
 };
 
 class FileWithException2 {
