@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -135,11 +136,50 @@ class QStack {
 
     bool Empty() {
       return q1_.empty() && q2_.empty();
+      return data_.size();
     }
 
   private:
     queue<T> q1_;
     queue<T> q2_;
+};
+
+class StackWithMin {
+  public:
+    void Push(int val) {
+      data_.push(val);
+
+      if (min_.empty() || val < min_.top()) {
+        min_.push(val);
+      } else {
+        min_.push(min_.top());
+      }
+    }
+
+    void Pop() {
+      data_.pop();
+      min_.pop();
+    }
+
+    int Top() {
+      return data_.top();
+    }
+
+    int Min() {
+      return min_.top();
+    }
+
+    bool Empty() {
+      return data_.empty();
+    }
+
+    int size() {
+      return data_.size();
+    }
+
+  private:
+    stack<int> min_;
+    stack<int> data_;
 };
 
 void TestStackPushAndPop() {
