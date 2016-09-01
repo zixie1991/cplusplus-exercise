@@ -49,6 +49,7 @@ int BPlusTree<K, V>::Get(const K& key, V* value, BPlusLeafNodeType **current) {
         }
         ret = 0;
       }
+
       break;
     }
 
@@ -150,7 +151,7 @@ int BPlusTree<K, V>::Remove(const K& key, V* value) {
   current->values.erase(current->values.begin() + key_idx);
   size_--;
 
-  BPlusTreeNodeType *ptr = dynamic_cast<BPlusTreeNodeType*>(current);
+  BPlusTreeNodeType *ptr = static_cast<BPlusTreeNodeType*>(current);
   while (ptr != root_ && ptr->keys.size() < (rank_ + 1) / 2) {
     BPlusTreeNodeType *tmp = ptr->parent;
     SolveUnderflow(ptr);
@@ -158,46 +159,34 @@ int BPlusTree<K, V>::Remove(const K& key, V* value) {
   }
 
   if (ptr == root_ && root_->keys.empty()) {
-    ptr = root_;
-    if(root_->children.empty()) {
-      root_ = NULL;
-    } else {
-      root_ = root_->children[0];
-      root_->parent = NULL;
+    delete root_;
+    root_ = NULL;
+
+    return 0;
+  }
+
+  while (ptr && ptr->parent) {
+    BPlusTreeNodeType *parent = ptr->parent;
+    auto iter = lower_bound(parent->keys.begin(), parent->keys.end(), ptr->keys.back());
+    if (iter != parent->keys.end() && *iter == ptr->keys.back()) {
+      break;
     }
 
-    delete ptr;
+    key_idx = iter - parent->keys.begin();
+    if (key_idx >= parent->keys.size()) {
+      key_idx = parent->keys.size() - 1;
+    }
+    parent->keys[key_idx] = ptr->keys.back();
+    ptr = parent;
   }
+
+  return 0;
 }
 
 template <typename K, typename V>
 void BPlusTree<K, V>::SolveOverflow(BPlusTreeNodeType *node) {
   BPlusTreeNodeType *parent = node->parent;
   int min_keys = (rank_ + 1) / 2;
-
-  // split left part
-  BPlusTreeNodeType *left = NULL;
-  if (node->children.empty()) {
-    BPlusLeafNodeType *left_leaf = new BPlusLeafNodeType();
-    BPlusLeafNodeType *leaf = dynamic_cast<BPlusLeafNodeType*>(node);
-
-    for (int i = 0; i < min_keys; i++) {
-      left_leaf->keys.push_back(leaf->keys[i]);
-      left_leaf->values.push_back(leaf->values[i]);
-    }
-
-    left = dynamic_cast<BPlusTreeNodeType*>(left_leaf);
-  } else {
-    BPlusTreeNodeType *left_node = new BPlusTreeNodeType();
-
-    for (int i = 0; i < min_keys; i++) {
-      left_node->keys.push_back(node->keys[i]);
-      left_node->children.push_back(node->children[i]);
-      left_node->children[i]->parent = left_node;
-    }
-
-    left = left_node;
-  }
 
   // split right part
   BPlusTreeNodeType *right = NULL;
@@ -210,7 +199,7 @@ void BPlusTree<K, V>::SolveOverflow(BPlusTreeNodeType *node) {
       right_leaf->values.push_back(leaf->values[i]);
     }
 
-    right = right_leaf;
+    right = static_cast<BPlusTreeNodeType*>(right_leaf);
   } else {
     BPlusTreeNodeType *right_node = new BPlusTreeNodeType();
 
@@ -226,6 +215,28 @@ void BPlusTree<K, V>::SolveOverflow(BPlusTreeNodeType *node) {
     right = right_node;
   }
 
+  // split left part
+  BPlusTreeNodeType *left = NULL;
+  if (node->children.empty()) {
+    BPlusLeafNodeType *left_leaf = dynamic_cast<BPlusLeafNodeType*>(node);
+
+    while (left_leaf->keys.size() > min_keys) {
+      left_leaf->keys.pop_back();
+      left_leaf->values.pop_back();
+    }
+
+    left = static_cast<BPlusTreeNodeType*>(left_leaf);
+  } else {
+    BPlusTreeNodeType *left_node = node;
+
+    while (left_node->keys.size() > min_keys) {
+      left_node->keys.pop_back();
+      left_node->children.pop_back();
+    }
+
+    left = left_node;
+  }
+
   int key_idx = 0;
   // 根节点上溢出
   if (!parent) {
@@ -239,6 +250,14 @@ void BPlusTree<K, V>::SolveOverflow(BPlusTreeNodeType *node) {
     }
     parent->keys.erase(parent->keys.begin() + key_idx);
     parent->children.erase(parent->children.begin() + key_idx);
+  }
+
+  if (node->children.empty()) {
+    BPlusLeafNodeType *left_leaf = dynamic_cast<BPlusLeafNodeType*>(left);
+    BPlusLeafNodeType *right_leaf = dynamic_cast<BPlusLeafNodeType*>(right);
+    BPlusLeafNodeType *tmp = left_leaf->next;
+    left_leaf->next = right_leaf;
+    right_leaf->next = tmp;
   }
 
   left->parent = parent;
@@ -270,6 +289,7 @@ void BPlusTree<K, V>::SolveUnderflow(BPlusTreeNodeType *node) {
 
       parent->keys[key_idx - 1] = left_leaf->keys.back();
       parent->keys[key_idx] = leaf->keys.back();
+
     } else {
       BPlusTreeNodeType *left_node = parent->children[key_idx - 1];
 
@@ -277,6 +297,7 @@ void BPlusTree<K, V>::SolveUnderflow(BPlusTreeNodeType *node) {
       left_node->keys.pop_back();
       node->children.insert(node->children.begin(), left_node->children.back());
       left_node->children.pop_back();
+      node->children.back()->parent = node;
       
       parent->keys[key_idx - 1] = left_node->keys.back();
       parent->keys[key_idx] = node->keys.back();
@@ -299,6 +320,7 @@ void BPlusTree<K, V>::SolveUnderflow(BPlusTreeNodeType *node) {
 
       parent->keys[key_idx] = leaf->keys.back();
       parent->keys[key_idx + 1] = right_leaf->keys.back();
+
     } else {
       BPlusTreeNodeType *right_node = parent->children[key_idx + 1];
 
@@ -306,6 +328,7 @@ void BPlusTree<K, V>::SolveUnderflow(BPlusTreeNodeType *node) {
       right_node->keys.erase(right_node->keys.begin());
       node->children.push_back(right_node->children.front());
       right_node->children.erase(right_node->children.begin());
+      node->children.back()->parent = node;
 
       parent->keys[key_idx] = node->keys.back();
       parent->keys[key_idx + 1] = right_node->keys.back();
@@ -329,6 +352,8 @@ void BPlusTree<K, V>::SolveUnderflow(BPlusTreeNodeType *node) {
       parent->keys[key_idx - 1] = left_leaf->keys.back();
       parent->keys.erase(parent->keys.begin() + key_idx);
       parent->children.erase(parent->children.begin() + key_idx);
+
+      left_leaf->next = leaf->next;
 
       delete leaf;
     } else {
@@ -367,6 +392,8 @@ void BPlusTree<K, V>::SolveUnderflow(BPlusTreeNodeType *node) {
     parent->keys[key_idx] = leaf->keys.back();
     parent->keys.erase(parent->keys.begin() + key_idx + 1);
     parent->children.erase(parent->children.begin() + key_idx + 1);
+
+    leaf->next = right_leaf->next;
 
     delete right_leaf;
   } else {
