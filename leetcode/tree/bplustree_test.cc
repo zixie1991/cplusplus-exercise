@@ -1,5 +1,10 @@
 #include "bplustree.h"
 
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
 void TestBPlusTreePut() {
   BPlusTree<int, int> bplustree3(3);
   bplustree3.Put(1, 1);
@@ -23,8 +28,16 @@ void TestBPlusTreePut() {
   bplustree3.Print();
   bplustree3.Remove(95);
   bplustree3.Print();
-  bplustree3.Remove(96);
+  //bplustree3.Remove(99);
+  //bplustree3.Remove(98);
   bplustree3.Print();
+
+  vector<int> values;
+  bplustree3.RangeGet(79, 98, &values);
+  for (auto &iter: values) {
+    cout << iter << " ";
+  }
+  cout << endl;
 }
 
 int main() {
