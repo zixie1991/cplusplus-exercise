@@ -37,6 +37,14 @@ class SkipList {
     int Insert(const K& key, const V& value);
     int Erase(const K& key, V* value=NULL);
 
+    int level() const {
+      return level_;
+    }
+
+    int size() const {
+      return size_;
+    }
+
     /**
      * @brief 打印
      */
@@ -75,6 +83,7 @@ class SkipList {
 
     enum{kMaxHeight=12}; // 最大层数
     int level_; // 层数
+    int size_; // 节点数目
     ListNodeType *head_; // 链表头节点
 };
 

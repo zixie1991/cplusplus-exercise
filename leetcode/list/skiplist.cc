@@ -13,6 +13,7 @@ using std::map;
 template <typename K, typename V>
 SkipList<K, V>::SkipList():
   level_(0),
+  size_(0),
   head_(NULL)
 {
   Init();
@@ -92,6 +93,8 @@ int SkipList<K, V>::Insert(const K& key, const V& value) {
     update[i]->next[i] = new_node;
   }
 
+  size_++;
+
   return 0;
 }
 
@@ -127,11 +130,12 @@ int SkipList<K, V>::Erase(const K& key, V* value) {
 
   DeleteListNode(current);
   current = NULL;
+  size_--;
 }
 
 template <typename K, typename V>
 void SkipList<K, V>::Print() {
-  cout << level_ << " level skip list" << endl;
+  cout << level_ << " level, " << size_ << " node skip list" << endl;
   for (int i = 0; i < level_; i++) {
     ListNodeType *ptr = head_;
     cout << "|->";
