@@ -1,41 +1,67 @@
-#ifndef SKIPLIST_H_
-#define SKIPLIST_H_
+#ifndef SKeyIPLIST_H_
+#define SKeyIPLIST_H_
 
 #include <stdio.h>
 
 /**
  * @brief 链表节点
  *
- * @tparam K
- * @tparam V
+ * @tparam Key 关键字类型
+ * @tparam Value 记录类型
  */
-template <typename K, typename V>
+template <typename Key, typename Value>
 struct ListNode {
-  K key; // 关键字
-  V value; // 记录
+  Key key; // 关键字
+  Value value; // 记录
   ListNode **next; // 柔性数组, 实现结构体变长
 
   ListNode(): next(NULL) {}
-  ListNode(const K& k, const V& v): key(k), value(v), next(NULL) {}
+  ListNode(const Key& k, const Value& v): key(k), value(v), next(NULL) {}
 };
 
 /**
  * @brief 跳表节点
  *
- * @tparam K
- * @tparam V
+ * @tparam Key 关键字类型
+ * @tparam Value 记录类型
  */
-template <typename K, typename V>
+template <typename Key, typename Value>
 class SkipList {
   public:
-    typedef ListNode<K, V> ListNodeType;
+    typedef ListNode<Key, Value> ListNodeType;
 
     SkipList();
     ~SkipList();
 
-    int Search(const K& key, V* value);
-    int Insert(const K& key, const V& value);
-    int Erase(const K& key, V* value=NULL);
+    /**
+     * @brief 查找
+     *
+     * @param key 关键字
+     * @param value 记录
+     *
+     * @return 
+     */
+    int Search(const Key& key, Value* value);
+
+    /**
+     * @brief 插入
+     *
+     * @param key 关键字
+     * @param value 记录
+     *
+     * @return 
+     */
+    int Insert(const Key& key, const Value& value);
+
+    /**
+     * @brief 删除
+     *
+     * @param key 关键字
+     * @param value 记录(可选)
+     *
+     * @return 
+     */
+    int Delete(const Key& key, Value* value=NULL);
 
     int level() const {
       return level_;
@@ -52,9 +78,14 @@ class SkipList {
 
   private:
     /**
-     * @brief 初始化
+     * @brief 初始化表
      */
-    void Init();
+    void NewList();
+
+    /**
+     * @brief 释放表
+     */
+    void DeleteList();
 
     /**
      * @brief 创建节点
@@ -65,7 +96,7 @@ class SkipList {
      *
      * @return 
      */
-    ListNodeType* NewListNode(int level, const K& key=0, const V& value=0);
+    ListNodeType* NewListNode(int level, const Key& key=0, const Value& value=0);
 
     /**
      * @brief 删除节点

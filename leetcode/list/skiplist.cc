@@ -10,33 +10,22 @@ using std::cout;
 using std::endl;
 using std::map;
 
-template <typename K, typename V>
-SkipList<K, V>::SkipList():
+template <typename Key, typename Value>
+SkipList<Key, Value>::SkipList():
   level_(0),
   size_(0),
   head_(NULL)
 {
-  Init();
+  NewList();
 }
 
-template <typename K, typename V>
-SkipList<K, V>::~SkipList() {
-  if (!head_) {
-    return ;
-  }
-
-  ListNodeType *current = head_;
-  ListNodeType *next = NULL;
-
-  while (current) {
-    next = current->next[0];
-    DeleteListNode(current);
-    current = next;
-  }
+template <typename Key, typename Value>
+SkipList<Key, Value>::~SkipList() {
+  DeleteList();
 }
 
-template <typename K, typename V>
-int SkipList<K, V>::Search(const K& key, V* value) {
+template <typename Key, typename Value>
+int SkipList<Key, Value>::Search(const Key& key, Value* value) {
   ListNodeType *current = head_;
   ListNodeType *next = NULL;
   for (int i = level_ - 1; i >= 0; i--) {
@@ -53,8 +42,8 @@ int SkipList<K, V>::Search(const K& key, V* value) {
   return -1;
 }
 
-template <typename K, typename V>
-int SkipList<K, V>::Insert(const K& key, const V& value) {
+template <typename Key, typename Value>
+int SkipList<Key, Value>::Insert(const Key& key, const Value& value) {
   // 查找待插入的位置
   ListNodeType *update[kMaxHeight];
   ListNodeType *current = head_;
@@ -98,8 +87,8 @@ int SkipList<K, V>::Insert(const K& key, const V& value) {
   return 0;
 }
 
-template <typename K, typename V>
-int SkipList<K, V>::Erase(const K& key, V* value) {
+template <typename Key, typename Value>
+int SkipList<Key, Value>::Delete(const Key& key, Value* value) {
   // 查找
   ListNodeType *update[kMaxHeight];
   ListNodeType *current = head_;
@@ -133,8 +122,8 @@ int SkipList<K, V>::Erase(const K& key, V* value) {
   size_--;
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::Print() {
+template <typename Key, typename Value>
+void SkipList<Key, Value>::Print() {
   cout << level_ << " level, " << size_ << " node skip list" << endl;
   for (int i = 0; i < level_; i++) {
     ListNodeType *ptr = head_;
@@ -146,15 +135,31 @@ void SkipList<K, V>::Print() {
   }
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::Init() {
+template <typename Key, typename Value>
+void SkipList<Key, Value>::NewList() {
   head_ = NewListNode(kMaxHeight);
 
   srand(time(0));
 }
 
-template <typename K, typename V>
-ListNode<K, V>* SkipList<K, V>::NewListNode(int level, const K& key, const V& value) {
+template <typename Key, typename Value>
+void SkipList<Key, Value>::DeleteList() {
+  if (!head_) {
+    return ;
+  }
+
+  ListNodeType *current = head_;
+  ListNodeType *next = NULL;
+
+  while (current) {
+    next = current->next[0];
+    DeleteListNode(current);
+    current = next;
+  }
+}
+
+template <typename Key, typename Value>
+ListNode<Key, Value>* SkipList<Key, Value>::NewListNode(int level, const Key& key, const Value& value) {
   ListNodeType *new_node = new ListNodeType(key, value);
   new_node->next = new ListNodeType*[level];
 
@@ -165,8 +170,8 @@ ListNode<K, V>* SkipList<K, V>::NewListNode(int level, const K& key, const V& va
   return new_node;
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::DeleteListNode(ListNodeType *node) {
+template <typename Key, typename Value>
+void SkipList<Key, Value>::DeleteListNode(ListNodeType *node) {
   if (!node) {
     return ;
   }
@@ -175,8 +180,8 @@ void SkipList<K, V>::DeleteListNode(ListNodeType *node) {
   delete node;
 }
 
-template <typename K, typename V>
-int SkipList<K, V>::RandomLevel() {
+template <typename Key, typename Value>
+int SkipList<Key, Value>::RandomLevel() {
   int level = 1;
   while (rand() % 2) {
     level++;
